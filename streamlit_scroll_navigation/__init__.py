@@ -32,10 +32,10 @@ def inject_crossorigin_interface():
         content = response.text
     
     # Run COI content in parent
-    # This works because streamlit.components.v1.html() creates an iframe from same domain as the parent scope
+    # This works because st.iframe() creates an iframe from same domain as the parent scope
     # Same domain can bypass sandbox restrictions to create an interface for cross-origin iframes
     # This allows custom components to interact with parent scope
-    components.html(
+    st.iframe(
         f"""<script>
 frameElement.parentElement.style.display = 'none';
 if (!window.parent.COI_injected) {{
@@ -46,18 +46,18 @@ if (!window.parent.COI_injected) {{
     window.parent.document.head.appendChild(script);
 }}
 </script>""",
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 def instantiate_crossorigin_interface(key):
     """Instantiate the CrossOriginInterface in the parent scope that responds to messages for key."""
-    components.html(
+    st.iframe(
         f"""<script>
 frameElement.parentElement.style.display = 'none';
 window.parent.instantiateCrossOriginInterface('{key}');
 </script>""",
-        height=0,
-        width=0,
+        height=1,
+        width=1,
     )
 
 class ForceAnchor:
